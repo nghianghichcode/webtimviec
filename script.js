@@ -16,6 +16,9 @@ let currentJobs = [];
 let currentPage = 1;
 let currentFilters = {};
 
+// Global state for saved jobs
+let savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
+
 // Sample jobs data
 const sampleJobs = [
     {
@@ -592,10 +595,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.5s ease';
     
+    // Show loading spinner
+    const loadingSpinner = document.createElement('div');
+    loadingSpinner.className = 'loading-spinner';
+    loadingSpinner.innerHTML = `
+        <div class="spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Đang tải Part Hub...</p>
+        </div>
+    `;
+    document.body.appendChild(loadingSpinner);
+    
     setTimeout(async () => {
-        document.body.style.opacity = '1';
-        await initializeApp();
-    }, 100);
+        try {
+            await initializeApp();
+            document.body.style.opacity = '1';
+            loadingSpinner.remove();
+        } catch (error) {
+            console.error('App initialization error:', error);
+            loadingSpinner.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Có lỗi xảy ra khi tải ứng dụng</p>
+                    <button class="btn btn-primary" onclick="location.reload()">Thử lại</button>
+                </div>
+            `;
+        }
+    }, 1000);
 });
 
 // API Helper Functions
@@ -766,6 +792,116 @@ function editProfile() {
   showNotification('Tính năng chỉnh sửa hồ sơ đang được phát triển!', 'info');
 }
 
+// Saved Jobs Functions
+function saveJob(jobId) {
+  if (!currentUser) {
+    showNotification('Vui lòng đăng nhập để lưu việc!', 'error');
+    return;
+  }
+  
+  const job = sampleJobs.find(j => j.id === jobId);
+  if (!job) return;
+  
+  const isAlreadySaved = savedJobs.some(saved => saved.id === jobId);
+  
+  if (isAlreadySaved) {
+    unsaveJob(jobId);
+  } else {
+    savedJobs.push({
+      id: jobId,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      salary: job.salary,
+      savedAt: new Date().toISOString()
+    });
+    localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+    showNotification('Đã lưu việc làm!', 'success');
+    updateSaveButton(jobId, true);
+  }
+}
+
+function unsaveJob(jobId) {
+  savedJobs = savedJobs.filter(job => job.id !== jobId);
+  localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+  showNotification('Đã bỏ lưu việc làm!', 'info');
+  updateSaveButton(jobId, false);
+}
+
+function updateSaveButton(jobId, isSaved) {
+  const saveBtn = document.querySelector(`[data-job-id="${jobId}"] .save-job-btn`);
+  if (saveBtn) {
+    saveBtn.innerHTML = isSaved 
+      ? '<i class="fas fa-heart"></i> Đã lưu'
+      : '<i class="far fa-heart"></i> Lưu việc';
+    saveBtn.classList.toggle('saved', isSaved);
+  }
+}
+
+function showSavedJobs() {
+  if (!currentUser) {
+    showNotification('Vui lòng đăng nhập để xem việc đã lưu!', 'error');
+    return;
+  }
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-heart"></i> Việc làm đã lưu</h2>
+        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="saved-jobs-list">
+          ${savedJobs.length === 0 ? `
+            <div class="no-saved-jobs">
+              <i class="fas fa-heart-broken"></i>
+              <h3>Chưa có việc nào được lưu</h3>
+              <p>Hãy tìm việc làm phù hợp và lưu lại nhé!</p>
+              <button class="btn btn-primary" onclick="this.closest('.modal').remove(); document.querySelector('.nav-link[href=\"jobs.html\"]').click();">
+                <i class="fas fa-search"></i> Tìm việc làm
+              </button>
+            </div>
+          ` : `
+            <div class="jobs-grid">
+              ${savedJobs.map(job => `
+                <div class="job-card">
+                  <div class="job-header">
+                    <h3>${job.title}</h3>
+                    <button class="btn btn-outline btn-sm" onclick="unsaveJob(${job.id}); this.closest('.modal').remove(); showSavedJobs();">
+                      <i class="fas fa-trash"></i> Bỏ lưu
+                    </button>
+                  </div>
+                  <div class="job-company">${job.company}</div>
+                  <div class="job-location">
+                    <i class="fas fa-map-marker-alt"></i> ${job.location}
+                  </div>
+                  <div class="job-salary">
+                    <i class="fas fa-money-bill-wave"></i> ${job.salary}
+                  </div>
+                  <div class="job-actions">
+                    <button class="btn btn-primary" onclick="showJobDetails(${job.id}); this.closest('.modal').remove();">
+                      <i class="fas fa-eye"></i> Xem chi tiết
+                    </button>
+                    <button class="btn btn-outline" onclick="applyForJob(${job.id})">
+                      <i class="fas fa-paper-plane"></i> Ứng tuyển
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
 async function getCurrentUser() {
   try {
     const response = await apiRequest('/auth/me');
@@ -891,6 +1027,9 @@ function updateAuthUI() {
           <button class="btn btn-outline" onclick="showUserProfile()">
             <i class="fas fa-user"></i> Hồ sơ
           </button>
+          <button class="btn btn-outline" onclick="showSavedJobs()">
+            <i class="fas fa-heart"></i> Việc đã lưu
+          </button>
           <button class="btn btn-outline" onclick="showMyApplications()">
             <i class="fas fa-file-alt"></i> Đơn ứng tuyển
           </button>
@@ -927,33 +1066,41 @@ async function renderJobs(jobs) {
     return;
   }
 
-  jobsGrid.innerHTML = jobs.map(job => `
-    <div class="job-card" data-category="${job.category}">
-      <div class="job-header">
-        <div class="job-company">
-          <img src="${job.company_logo || 'https://via.placeholder.com/40'}" alt="Company" class="company-logo">
-          <div class="company-info">
-            <h3>${job.company_name}</h3>
-            <p>${job.location}</p>
+  jobsGrid.innerHTML = jobs.map(job => {
+    const isSaved = savedJobs.some(saved => saved.id === job.id);
+    return `
+      <div class="job-card" data-category="${job.category}" data-job-id="${job.id}">
+        <div class="job-header">
+          <div class="job-company">
+            <img src="${job.company_logo || 'https://via.placeholder.com/40'}" alt="Company" class="company-logo">
+            <div class="company-info">
+              <h3>${job.company_name}</h3>
+              <p>${job.location}</p>
+            </div>
+          </div>
+          <div class="job-header-actions">
+            <span class="job-type">${job.job_type}</span>
+            <button class="save-job-btn ${isSaved ? 'saved' : ''}" onclick="saveJob(${job.id})">
+              <i class="fas fa-heart"></i> ${isSaved ? 'Đã lưu' : 'Lưu việc'}
+            </button>
           </div>
         </div>
-        <span class="job-type">${job.job_type}</span>
-      </div>
-      <div class="job-content">
-        <h4>${job.title}</h4>
-        <p>${job.description.substring(0, 100)}...</p>
-        <div class="job-details">
-          <span><i class="fas fa-money-bill"></i> ${formatSalary(job.salary_min, job.salary_max, job.salary_type)}</span>
-          <span><i class="fas fa-clock"></i> ${job.work_schedule || 'Linh hoạt'}</span>
-          <span><i class="fas fa-calendar"></i> ${job.is_remote ? 'Remote' : 'Tại văn phòng'}</span>
+        <div class="job-content">
+          <h4>${job.title}</h4>
+          <p>${job.description.substring(0, 100)}...</p>
+          <div class="job-details">
+            <span><i class="fas fa-money-bill"></i> ${formatSalary(job.salary_min, job.salary_max, job.salary_type)}</span>
+            <span><i class="fas fa-clock"></i> ${job.work_schedule || 'Linh hoạt'}</span>
+            <span><i class="fas fa-calendar"></i> ${job.is_remote ? 'Remote' : 'Tại văn phòng'}</span>
+          </div>
+        </div>
+        <div class="job-footer">
+          <button class="btn btn-primary" onclick="applyForJob(${job.id})">Ứng tuyển</button>
+          <button class="btn btn-outline" onclick="viewJobDetails(${job.id})">Chi tiết</button>
         </div>
       </div>
-      <div class="job-footer">
-        <button class="btn btn-primary" onclick="applyForJob(${job.id})">Ứng tuyển</button>
-        <button class="btn btn-outline" onclick="viewJobDetails(${job.id})">Chi tiết</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function formatSalary(min, max, type) {
@@ -1344,3 +1491,6 @@ window.viewCompanyJobs = viewCompanyJobs;
 window.showUserProfile = showUserProfile;
 window.showMyApplications = showMyApplications;
 window.editProfile = editProfile;
+window.saveJob = saveJob;
+window.unsaveJob = unsaveJob;
+window.showSavedJobs = showSavedJobs;
