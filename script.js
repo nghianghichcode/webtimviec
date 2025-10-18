@@ -1,5 +1,5 @@
-// API Configuration
-const API_BASE_URL = 'http://localhost:3000/api';
+// API Configuration - Static mode for GitHub Pages
+const API_BASE_URL = null; // Disabled for static deployment
 
 // DOM Elements
 const hamburger = document.querySelector('.hamburger');
@@ -89,6 +89,126 @@ const sampleJobs = [
         ],
         postedDate: "2024-01-13",
         deadline: "2024-02-13"
+    },
+    {
+        id: 4,
+        title: "Nhân viên bán hàng - Uniqlo",
+        company: "Uniqlo Vietnam",
+        location: "Hà Nội",
+        salary: "25k-30k/h",
+        type: "Part-time",
+        category: "retail",
+        description: "Tư vấn khách hàng, bán hàng tại cửa hàng Uniqlo. Công việc phù hợp với sinh viên.",
+        requirements: [
+            "Sinh viên năm 2 trở lên",
+            "Giao tiếp tốt",
+            "Ngoại hình ưa nhìn",
+            "Làm việc được cuối tuần"
+        ],
+        benefits: [
+            "Lương cạnh tranh",
+            "Đào tạo sản phẩm",
+            "Môi trường quốc tế",
+            "Giảm giá sản phẩm"
+        ],
+        postedDate: "2024-01-12",
+        deadline: "2024-02-12"
+    },
+    {
+        id: 5,
+        title: "Gia sư Tiếng Anh",
+        company: "English Center",
+        location: "Đà Nẵng",
+        salary: "40k-60k/h",
+        type: "Part-time",
+        category: "education",
+        description: "Dạy Tiếng Anh cho học sinh cấp 1, cấp 2. Làm việc tại trung tâm hoặc online.",
+        requirements: [
+            "IELTS >= 6.5 hoặc TOEIC >= 800",
+            "Kỹ năng sư phạm",
+            "Kiên nhẫn với trẻ em",
+            "Làm việc được buổi tối"
+        ],
+        benefits: [
+            "Lương cao",
+            "Phát triển kỹ năng sư phạm",
+            "Môi trường chuyên nghiệp",
+            "Cơ hội thăng tiến"
+        ],
+        postedDate: "2024-01-11",
+        deadline: "2024-02-11"
+    },
+    {
+        id: 6,
+        title: "Nhân viên phục vụ - KFC",
+        company: "KFC Vietnam",
+        location: "TP.HCM",
+        salary: "22k-28k/h",
+        type: "Part-time",
+        category: "food",
+        description: "Phục vụ khách hàng, chuẩn bị đồ ăn nhanh. Công việc linh hoạt, phù hợp sinh viên.",
+        requirements: [
+            "Sinh viên năm 1 trở lên",
+            "Sức khỏe tốt",
+            "Làm việc được ca tối",
+            "Thái độ phục vụ tốt"
+        ],
+        benefits: [
+            "Lương ổn định",
+            "Đào tạo kỹ năng",
+            "Môi trường năng động",
+            "Thưởng theo doanh số"
+        ],
+        postedDate: "2024-01-10",
+        deadline: "2024-02-10"
+    },
+    {
+        id: 7,
+        title: "Freelance Designer",
+        company: "Creative Studio",
+        location: "Toàn quốc",
+        salary: "50k-100k/h",
+        type: "Part-time",
+        category: "design",
+        description: "Thiết kế logo, banner, poster cho các dự án. Làm việc remote, linh hoạt thời gian.",
+        requirements: [
+            "Thành thạo Photoshop, Illustrator",
+            "Portfolio đẹp",
+            "Sáng tạo, có gu thẩm mỹ",
+            "Làm việc độc lập"
+        ],
+        benefits: [
+            "Lương cao",
+            "Làm việc tại nhà",
+            "Phát triển portfolio",
+            "Linh hoạt thời gian"
+        ],
+        postedDate: "2024-01-09",
+        deadline: "2024-02-09"
+    },
+    {
+        id: 8,
+        title: "Nhân viên bán hàng - Nike",
+        company: "Nike Vietnam",
+        location: "Hà Nội",
+        salary: "28k-35k/h",
+        type: "Part-time",
+        category: "retail",
+        description: "Tư vấn sản phẩm thể thao, bán hàng tại cửa hàng Nike. Công việc năng động.",
+        requirements: [
+            "Yêu thích thể thao",
+            "Giao tiếp tốt",
+            "Làm việc được cuối tuần",
+            "Hiểu biết về sản phẩm thể thao"
+        ],
+        benefits: [
+            "Lương hấp dẫn",
+            "Giảm giá sản phẩm",
+            "Môi trường thể thao",
+            "Đào tạo sản phẩm"
+        ],
+        postedDate: "2024-01-08",
+        deadline: "2024-02-08"
     }
 ];
 
@@ -478,43 +598,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
 });
 
-// API Helper Functions
+// API Helper Functions - Static mode for GitHub Pages
 async function apiRequest(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
-  const defaultOptions = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  // For static deployment, return mock success response
+  console.log('Static mode: API request disabled for GitHub Pages deployment');
+  return {
+    success: true,
+    data: {},
+    message: 'Static mode - API disabled'
   };
-
-  // Add auth token if available
-  const token = localStorage.getItem('token');
-  if (token) {
-    defaultOptions.headers.Authorization = `Bearer ${token}`;
-  }
-
-  const config = {
-    ...defaultOptions,
-    ...options,
-    headers: {
-      ...defaultOptions.headers,
-      ...options.headers,
-    },
-  };
-
-  try {
-    const response = await fetch(url, config);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'API request failed');
-    }
-
-    return data;
-  } catch (error) {
-    console.error('API request error:', error);
-    throw error;
-  }
 }
 
 // Authentication Functions
@@ -578,20 +670,47 @@ async function getCurrentUser() {
 // Job Functions
 async function fetchJobs(filters = {}) {
   try {
-    const queryParams = new URLSearchParams();
+    // Use sample data for static deployment
+    let filteredJobs = [...sampleJobs];
     
-    Object.keys(filters).forEach(key => {
-      if (filters[key] !== undefined && filters[key] !== '') {
-        queryParams.append(key, filters[key]);
-      }
-    });
-
-    const response = await apiRequest(`/jobs?${queryParams.toString()}`);
-    
-    if (response.success) {
-      currentJobs = response.data.jobs;
-      return response.data;
+    // Apply filters
+    if (filters.category && filters.category !== 'all') {
+      filteredJobs = filteredJobs.filter(job => job.category === filters.category);
     }
+    
+    if (filters.location && filters.location !== 'all') {
+      filteredJobs = filteredJobs.filter(job => 
+        job.location.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+    
+    if (filters.salary && filters.salary !== 'all') {
+      filteredJobs = filteredJobs.filter(job => {
+        const salary = job.salary;
+        if (filters.salary === 'under-20k') return salary.includes('20k') && !salary.includes('30k');
+        if (filters.salary === '20k-30k') return salary.includes('25k') || salary.includes('30k');
+        if (filters.salary === '30k-50k') return salary.includes('35k') || salary.includes('40k') || salary.includes('50k');
+        if (filters.salary === 'over-50k') return salary.includes('50k') && !salary.includes('25k');
+        return true;
+      });
+    }
+    
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
+      filteredJobs = filteredJobs.filter(job => 
+        job.title.toLowerCase().includes(searchTerm) ||
+        job.company.toLowerCase().includes(searchTerm) ||
+        job.description.toLowerCase().includes(searchTerm)
+      );
+    }
+    
+    currentJobs = filteredJobs;
+    return {
+      jobs: filteredJobs,
+      total: filteredJobs.length,
+      page: 1,
+      totalPages: 1
+    };
   } catch (error) {
     console.error('Fetch jobs error:', error);
     throw error;
@@ -600,8 +719,12 @@ async function fetchJobs(filters = {}) {
 
 async function fetchJobById(id) {
   try {
-    const response = await apiRequest(`/jobs/${id}`);
-    return response.data;
+    // Use sample data for static deployment
+    const job = sampleJobs.find(job => job.id === parseInt(id));
+    if (!job) {
+      throw new Error('Job not found');
+    }
+    return job;
   } catch (error) {
     console.error('Fetch job error:', error);
     throw error;
