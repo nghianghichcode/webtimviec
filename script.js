@@ -1,0 +1,800 @@
+// API Configuration
+const API_BASE_URL = 'http://localhost:3000/api';
+
+// DOM Elements
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+const filterBtns = document.querySelectorAll('.filter-btn');
+const jobCards = document.querySelectorAll('.job-card');
+const loginModal = document.getElementById('loginModal');
+const registerModal = document.getElementById('registerModal');
+const closeBtns = document.querySelectorAll('.close');
+
+// Global state
+let currentUser = null;
+let currentJobs = [];
+let currentPage = 1;
+let currentFilters = {};
+
+// Mobile Navigation Toggle
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+});
+
+// Close mobile menu when clicking on a link
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+    });
+});
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Job Filter Functionality
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+        // Remove active class from all buttons
+        filterBtns.forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        btn.classList.add('active');
+        
+        const category = btn.getAttribute('data-category');
+        
+        // Update current filters
+        if (category === 'all') {
+            delete currentFilters.category;
+        } else {
+            currentFilters.category = category;
+        }
+        
+        // Apply filters
+        await applyFilters();
+    });
+});
+
+// Modal Functions
+function showLoginModal() {
+    loginModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function showRegisterModal() {
+    registerModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function hideModals() {
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close modals when clicking close button
+closeBtns.forEach(btn => {
+    btn.addEventListener('click', hideModals);
+});
+
+// Close modals when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === loginModal || e.target === registerModal) {
+        hideModals();
+    }
+});
+
+// Close modals with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        hideModals();
+    }
+});
+
+// Scroll to jobs section
+function scrollToJobs() {
+    const jobsSection = document.getElementById('jobs');
+    if (jobsSection) {
+        jobsSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// Form Validation and Submission
+function validateForm(form) {
+    const inputs = form.querySelectorAll('input[required], textarea[required]');
+    let isValid = true;
+    
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.style.borderColor = '#ef4444';
+            isValid = false;
+        } else {
+            input.style.borderColor = '#e2e8f0';
+        }
+    });
+    
+    return isValid;
+}
+
+// Contact Form Submission
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        if (validateForm(contactForm)) {
+            // Show success message
+            showNotification('Tin nhắn đã được gửi thành công!', 'success');
+            contactForm.reset();
+        } else {
+            showNotification('Vui lòng điền đầy đủ thông tin!', 'error');
+        }
+    });
+}
+
+// Modal Form Submissions
+const modalForms = document.querySelectorAll('.modal-form');
+modalForms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        if (validateForm(form)) {
+            const formType = form.closest('.modal').id;
+            if (formType === 'loginModal') {
+                showNotification('Đăng nhập thành công!', 'success');
+                hideModals();
+            } else if (formType === 'registerModal') {
+                showNotification('Đăng ký thành công!', 'success');
+                hideModals();
+            }
+            form.reset();
+        } else {
+            showNotification('Vui lòng điền đầy đủ thông tin!', 'error');
+        }
+    });
+});
+
+// Job Application
+document.querySelectorAll('.job-card .btn-primary').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const jobTitle = btn.closest('.job-card').querySelector('h4').textContent;
+        showNotification(`Đã ứng tuyển cho vị trí: ${jobTitle}`, 'success');
+    });
+});
+
+// Notification System
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        z-index: 3000;
+        animation: slideInRight 0.3s ease;
+        max-width: 400px;
+    `;
+    
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Add to DOM
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+}
+
+// Header Scroll Effect
+window.addEventListener('scroll', () => {
+    const header = document.querySelector('.header');
+    if (window.scrollY > 100) {
+        header.style.background = 'rgba(255, 255, 255, 0.95)';
+        header.style.backdropFilter = 'blur(10px)';
+    } else {
+        header.style.background = '#fff';
+        header.style.backdropFilter = 'none';
+    }
+});
+
+// Intersection Observer for Animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe elements for animation
+document.querySelectorAll('.feature-card, .job-card, .contact-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+});
+
+// Search Functionality
+function searchJobs(query) {
+    const jobCards = document.querySelectorAll('.job-card');
+    const searchTerm = query.toLowerCase();
+    
+    jobCards.forEach(card => {
+        const title = card.querySelector('h4').textContent.toLowerCase();
+        const company = card.querySelector('.company-info h3').textContent.toLowerCase();
+        const description = card.querySelector('p').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || company.includes(searchTerm) || description.includes(searchTerm)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Add search input if needed
+function addSearchInput() {
+    const jobsSection = document.getElementById('jobs');
+    if (jobsSection && !document.querySelector('.search-container')) {
+        const searchContainer = document.createElement('div');
+        searchContainer.className = 'search-container';
+        searchContainer.innerHTML = `
+            <div class="search-box">
+                <input type="text" id="jobSearch" placeholder="Tìm kiếm việc làm..." />
+                <i class="fas fa-search"></i>
+            </div>
+        `;
+        
+        // Add styles
+        const searchStyles = document.createElement('style');
+        searchStyles.textContent = `
+            .search-container {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+            .search-box {
+                position: relative;
+                max-width: 400px;
+                width: 100%;
+            }
+            .search-box input {
+                width: 100%;
+                padding: 1rem 3rem 1rem 1rem;
+                border: 2px solid #e2e8f0;
+                border-radius: 25px;
+                font-size: 1rem;
+                transition: border-color 0.3s ease;
+            }
+            .search-box input:focus {
+                outline: none;
+                border-color: #2563eb;
+            }
+            .search-box i {
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #64748b;
+            }
+        `;
+        document.head.appendChild(searchStyles);
+        
+        jobsSection.querySelector('.container').insertBefore(searchContainer, jobsSection.querySelector('.jobs-filter'));
+        
+        // Add search functionality
+        const searchInput = document.getElementById('jobSearch');
+        searchInput.addEventListener('input', (e) => {
+            searchJobs(e.target.value);
+        });
+    }
+}
+
+// Initialize search functionality
+addSearchInput();
+
+// Lazy loading for images
+const images = document.querySelectorAll('img[data-src]');
+const imageObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            img.classList.remove('lazy');
+            imageObserver.unobserve(img);
+        }
+    });
+});
+
+images.forEach(img => imageObserver.observe(img));
+
+// Performance optimization: Debounce scroll events
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Apply debounce to scroll events
+const debouncedScrollHandler = debounce(() => {
+    // Scroll-based animations and effects
+}, 10);
+
+window.addEventListener('scroll', debouncedScrollHandler);
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('StudentJobs website loaded successfully!');
+    
+    // Add loading animation
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+    
+    setTimeout(async () => {
+        document.body.style.opacity = '1';
+        await initializeApp();
+    }, 100);
+});
+
+// API Helper Functions
+async function apiRequest(endpoint, options = {}) {
+  const url = `${API_BASE_URL}${endpoint}`;
+  const defaultOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  // Add auth token if available
+  const token = localStorage.getItem('token');
+  if (token) {
+    defaultOptions.headers.Authorization = `Bearer ${token}`;
+  }
+
+  const config = {
+    ...defaultOptions,
+    ...options,
+    headers: {
+      ...defaultOptions.headers,
+      ...options.headers,
+    },
+  };
+
+  try {
+    const response = await fetch(url, config);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'API request failed');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('API request error:', error);
+    throw error;
+  }
+}
+
+// Authentication Functions
+async function login(email, password) {
+  try {
+    const response = await apiRequest('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (response.success) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      currentUser = response.data.user;
+      return response;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function register(userData) {
+  try {
+    const response = await apiRequest('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+
+    if (response.success) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      currentUser = response.data.user;
+      return response;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  currentUser = null;
+  updateAuthUI();
+}
+
+async function getCurrentUser() {
+  try {
+    const response = await apiRequest('/auth/me');
+    if (response.success) {
+      currentUser = response.data;
+      localStorage.setItem('user', JSON.stringify(response.data));
+      return response.data;
+    }
+  } catch (error) {
+    console.error('Get current user error:', error);
+    logout();
+  }
+}
+
+// Job Functions
+async function fetchJobs(filters = {}) {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== '') {
+        queryParams.append(key, filters[key]);
+      }
+    });
+
+    const response = await apiRequest(`/jobs?${queryParams.toString()}`);
+    
+    if (response.success) {
+      currentJobs = response.data.jobs;
+      return response.data;
+    }
+  } catch (error) {
+    console.error('Fetch jobs error:', error);
+    throw error;
+  }
+}
+
+async function fetchJobById(id) {
+  try {
+    const response = await apiRequest(`/jobs/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Fetch job error:', error);
+    throw error;
+  }
+}
+
+async function applyForJob(jobId, coverLetter = '', resumeUrl = '') {
+  try {
+    const response = await apiRequest('/applications', {
+      method: 'POST',
+      body: JSON.stringify({
+        job_id: jobId,
+        cover_letter: coverLetter,
+        resume_url: resumeUrl,
+      }),
+    });
+    return response;
+  } catch (error) {
+    console.error('Apply for job error:', error);
+    throw error;
+  }
+}
+
+async function getUserApplications() {
+  try {
+    const response = await apiRequest('/applications/my-applications');
+    return response.data;
+  } catch (error) {
+    console.error('Get applications error:', error);
+    throw error;
+  }
+}
+
+// UI Update Functions
+function updateAuthUI() {
+  const navButtons = document.querySelector('.nav-buttons');
+  const userMenu = document.querySelector('.user-menu');
+  
+  if (currentUser) {
+    navButtons.innerHTML = `
+      <div class="user-menu">
+        <span class="user-name">Xin chào, ${currentUser.name}</span>
+        <button class="btn btn-outline" onclick="logout()">Đăng xuất</button>
+      </div>
+    `;
+  } else {
+    navButtons.innerHTML = `
+      <button class="btn btn-outline" onclick="showLoginModal()">Đăng nhập</button>
+      <button class="btn btn-primary" onclick="showRegisterModal()">Đăng ký</button>
+    `;
+  }
+}
+
+async function renderJobs(jobs) {
+  const jobsGrid = document.querySelector('.jobs-grid');
+  if (!jobsGrid) return;
+
+  if (jobs.length === 0) {
+    jobsGrid.innerHTML = `
+      <div class="no-jobs">
+        <i class="fas fa-search"></i>
+        <h3>Không tìm thấy việc làm</h3>
+        <p>Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+      </div>
+    `;
+    return;
+  }
+
+  jobsGrid.innerHTML = jobs.map(job => `
+    <div class="job-card" data-category="${job.category}">
+      <div class="job-header">
+        <div class="job-company">
+          <img src="${job.company_logo || 'https://via.placeholder.com/40'}" alt="Company" class="company-logo">
+          <div class="company-info">
+            <h3>${job.company_name}</h3>
+            <p>${job.location}</p>
+          </div>
+        </div>
+        <span class="job-type">${job.job_type}</span>
+      </div>
+      <div class="job-content">
+        <h4>${job.title}</h4>
+        <p>${job.description.substring(0, 100)}...</p>
+        <div class="job-details">
+          <span><i class="fas fa-money-bill"></i> ${formatSalary(job.salary_min, job.salary_max, job.salary_type)}</span>
+          <span><i class="fas fa-clock"></i> ${job.work_schedule || 'Linh hoạt'}</span>
+          <span><i class="fas fa-calendar"></i> ${job.is_remote ? 'Remote' : 'Tại văn phòng'}</span>
+        </div>
+      </div>
+      <div class="job-footer">
+        <button class="btn btn-primary" onclick="applyForJob(${job.id})">Ứng tuyển</button>
+        <button class="btn btn-outline" onclick="viewJobDetails(${job.id})">Chi tiết</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatSalary(min, max, type) {
+  if (!min && !max) return 'Thỏa thuận';
+  
+  const formatNumber = (num) => num.toLocaleString('vi-VN');
+  
+  if (min && max) {
+    return `${formatNumber(min)} - ${formatNumber(max)}đ/${type === 'hourly' ? 'giờ' : type === 'daily' ? 'ngày' : 'tháng'}`;
+  } else if (min) {
+    return `Từ ${formatNumber(min)}đ/${type === 'hourly' ? 'giờ' : type === 'daily' ? 'ngày' : 'tháng'}`;
+  } else {
+    return `${formatNumber(max)}đ/${type === 'hourly' ? 'giờ' : type === 'daily' ? 'ngày' : 'tháng'}`;
+  }
+}
+
+// Updated Modal Functions
+async function showLoginModal() {
+  loginModal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+async function showRegisterModal() {
+  registerModal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+// Updated Form Handlers
+async function handleLogin(event) {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const email = formData.get('email');
+  const password = formData.get('password');
+
+  try {
+    await login(email, password);
+    showNotification('Đăng nhập thành công!', 'success');
+    hideModals();
+    updateAuthUI();
+    event.target.reset();
+  } catch (error) {
+    showNotification(error.message || 'Đăng nhập thất bại', 'error');
+  }
+}
+
+async function handleRegister(event) {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const userData = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+    phone: formData.get('phone'),
+    university: formData.get('university'),
+    major: formData.get('major'),
+    year_of_study: formData.get('year_of_study') ? parseInt(formData.get('year_of_study')) : null
+  };
+
+  try {
+    await register(userData);
+    showNotification('Đăng ký thành công!', 'success');
+    hideModals();
+    updateAuthUI();
+    event.target.reset();
+  } catch (error) {
+    showNotification(error.message || 'Đăng ký thất bại', 'error');
+  }
+}
+
+// Updated Job Application
+async function applyForJob(jobId) {
+  if (!currentUser) {
+    showNotification('Vui lòng đăng nhập để ứng tuyển', 'error');
+    showLoginModal();
+    return;
+  }
+
+  try {
+    const response = await applyForJob(jobId);
+    showNotification('Ứng tuyển thành công!', 'success');
+  } catch (error) {
+    showNotification(error.message || 'Ứng tuyển thất bại', 'error');
+  }
+}
+
+async function viewJobDetails(jobId) {
+  try {
+    const job = await fetchJobById(jobId);
+    // Show job details modal or navigate to detail page
+    showJobDetailsModal(job);
+  } catch (error) {
+    showNotification('Không thể tải thông tin việc làm', 'error');
+  }
+}
+
+function showJobDetailsModal(job) {
+  // Create and show job details modal
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content job-details-modal">
+      <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+      <div class="job-detail-header">
+        <h2>${job.title}</h2>
+        <div class="company-info">
+          <img src="${job.company_logo || 'https://via.placeholder.com/60'}" alt="Company" class="company-logo">
+          <div>
+            <h3>${job.company_name}</h3>
+            <p>${job.location}</p>
+          </div>
+        </div>
+      </div>
+      <div class="job-detail-content">
+        <div class="job-info">
+          <h3>Thông tin việc làm</h3>
+          <p><strong>Mô tả:</strong> ${job.description}</p>
+          ${job.requirements ? `<p><strong>Yêu cầu:</strong> ${job.requirements}</p>` : ''}
+          ${job.benefits ? `<p><strong>Quyền lợi:</strong> ${job.benefits}</p>` : ''}
+          <p><strong>Lương:</strong> ${formatSalary(job.salary_min, job.salary_max, job.salary_type)}</p>
+          <p><strong>Loại việc:</strong> ${job.job_type}</p>
+          <p><strong>Lịch làm việc:</strong> ${job.work_schedule || 'Linh hoạt'}</p>
+        </div>
+      </div>
+      <div class="job-detail-footer">
+        <button class="btn btn-primary" onclick="applyForJob(${job.id}); this.closest('.modal').remove()">Ứng tuyển ngay</button>
+        <button class="btn btn-outline" onclick="this.closest('.modal').remove()">Đóng</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  modal.style.display = 'block';
+}
+
+// Updated Filter Functions
+async function applyFilters() {
+  try {
+    const data = await fetchJobs(currentFilters);
+    await renderJobs(data.jobs);
+  } catch (error) {
+    showNotification('Không thể tải danh sách việc làm', 'error');
+  }
+}
+
+// Initialize App
+async function initializeApp() {
+  // Check if user is logged in
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+  
+  if (token && user) {
+    try {
+      currentUser = JSON.parse(user);
+      await getCurrentUser(); // Verify token is still valid
+    } catch (error) {
+      logout();
+    }
+  }
+  
+  updateAuthUI();
+  
+  // Load initial jobs
+  try {
+    const data = await fetchJobs();
+    await renderJobs(data.jobs);
+  } catch (error) {
+    console.error('Failed to load jobs:', error);
+  }
+}
+
+// Export functions for global access
+window.showLoginModal = showLoginModal;
+window.showRegisterModal = showRegisterModal;
+window.scrollToJobs = scrollToJobs;
+window.applyForJob = applyForJob;
+window.viewJobDetails = viewJobDetails;
+window.logout = logout;

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentJobs - Tìm việc làm part-time cho sinh viên</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="logo.jpg" alt="StudentJobs Logo" class="logo">
+                    <span class="logo-text">StudentJobs</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link">Trang chủ</a></li>
+                    <li><a href="#jobs" class="nav-link">Việc làm</a></li>
+                    <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
+                    <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button class="btn btn-outline" onclick="showLoginModal()">Đăng nhập</button>
+                    <button class="btn btn-primary" onclick="showRegisterModal()">Đăng ký</button>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Tìm việc làm <span class="highlight">part-time</span> 
+                    phù hợp cho sinh viên
+                </h1>
+                <p class="hero-description">
+                    Kết nối sinh viên với các cơ hội việc làm part-time linh hoạt, 
+                    phù hợp với lịch học và mang lại thu nhập ổn định.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-large" onclick="scrollToJobs()">
+                        <i class="fas fa-search"></i>
+                        Tìm việc ngay
+                    </button>
+                    <button class="btn btn-outline btn-large" onclick="showRegisterModal()">
+                        <i class="fas fa-user-plus"></i>
+                        Đăng ký miễn phí
+                    </button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <div class="card-header">
+                        <div class="card-avatar">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Nguyễn Văn A</h3>
+                            <p>Sinh viên năm 3</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="job-item">
+                            <i class="fas fa-coffee"></i>
+                            <span>Barista - 25k/h</span>
+                        </div>
+                        <div class="job-item">
+                            <i class="fas fa-laptop"></i>
+                            <span>Content Writer - 30k/h</span>
+                        </div>
+                        <div class="job-item">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>Gia sư - 50k/h</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Tại sao chọn StudentJobs?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Linh hoạt thời gian</h3>
+                    <p>Làm việc theo lịch học, không ảnh hưởng đến việc học tập</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>An toàn & Tin cậy</h3>
+                    <p>Kiểm tra kỹ lưỡng các nhà tuyển dụng, đảm bảo an toàn</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Thu nhập ổn định</h3>
+                    <p>Mức lương cạnh tranh, thanh toán đúng hạn</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Phát triển kỹ năng</h3>
+                    <p>Rèn luyện kỹ năng mềm, kinh nghiệm thực tế</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jobs Section -->
+    <section id="jobs" class="jobs">
+        <div class="container">
+            <h2 class="section-title">Việc làm hot</h2>
+            <div class="jobs-filter">
+                <button class="filter-btn active" data-category="all">Tất cả</button>
+                <button class="filter-btn" data-category="food">F&B</button>
+                <button class="filter-btn" data-category="education">Giáo dục</button>
+                <button class="filter-btn" data-category="tech">Công nghệ</button>
+                <button class="filter-btn" data-category="retail">Bán lẻ</button>
+            </div>
+            <div class="jobs-grid">
+                <div class="job-card" data-category="food">
+                    <div class="job-header">
+                        <div class="job-company">
+                            <img src="https://via.placeholder.com/40" alt="Company" class="company-logo">
+                            <div class="company-info">
+                                <h3>Starbucks Coffee</h3>
+                                <p>Quận 1, TP.HCM</p>
+                            </div>
+                        </div>
+                        <span class="job-type">Part-time</span>
+                    </div>
+                    <div class="job-content">
+                        <h4>Barista</h4>
+                        <p>Phục vụ khách hàng, pha chế đồ uống, quản lý quầy</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-money-bill"></i> 25,000đ/h</span>
+                            <span><i class="fas fa-clock"></i> 4-6h/ngày</span>
+                            <span><i class="fas fa-calendar"></i> Thứ 2-6</span>
+                        </div>
+                    </div>
+                    <div class="job-footer">
+                        <button class="btn btn-primary">Ứng tuyển</button>
+                        <button class="btn btn-outline">Chi tiết</button>
+                    </div>
+                </div>
+
+                <div class="job-card" data-category="education">
+                    <div class="job-header">
+                        <div class="job-company">
+                            <img src="https://via.placeholder.com/40" alt="Company" class="company-logo">
+                            <div class="company-info">
+                                <h3>Trung tâm Anh ngữ ABC</h3>
+                                <p>Quận 3, TP.HCM</p>
+                            </div>
+                        </div>
+                        <span class="job-type">Part-time</span>
+                    </div>
+                    <div class="job-content">
+                        <h4>Gia sư tiếng Anh</h4>
+                        <p>Dạy kèm học sinh cấp 1,2,3 môn tiếng Anh</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-money-bill"></i> 50,000đ/h</span>
+                            <span><i class="fas fa-clock"></i> 2-3h/ngày</span>
+                            <span><i class="fas fa-calendar"></i> Linh hoạt</span>
+                        </div>
+                    </div>
+                    <div class="job-footer">
+                        <button class="btn btn-primary">Ứng tuyển</button>
+                        <button class="btn btn-outline">Chi tiết</button>
+                    </div>
+                </div>
+
+                <div class="job-card" data-category="tech">
+                    <div class="job-header">
+                        <div class="job-company">
+                            <img src="https://via.placeholder.com/40" alt="Company" class="company-logo">
+                            <div class="company-info">
+                                <h3>TechStart Vietnam</h3>
+                                <p>Quận 7, TP.HCM</p>
+                            </div>
+                        </div>
+                        <span class="job-type">Part-time</span>
+                    </div>
+                    <div class="job-content">
+                        <h4>Content Writer</h4>
+                        <p>Viết bài blog, content marketing cho website</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-money-bill"></i> 30,000đ/h</span>
+                            <span><i class="fas fa-clock"></i> Remote</span>
+                            <span><i class="fas fa-calendar"></i> Linh hoạt</span>
+                        </div>
+                    </div>
+                    <div class="job-footer">
+                        <button class="btn btn-primary">Ứng tuyển</button>
+                        <button class="btn btn-outline">Chi tiết</button>
+                    </div>
+                </div>
+
+                <div class="job-card" data-category="retail">
+                    <div class="job-header">
+                        <div class="job-company">
+                            <img src="https://via.placeholder.com/40" alt="Company" class="company-logo">
+                            <div class="company-info">
+                                <h3>Uniqlo Vietnam</h3>
+                                <p>Quận 1, TP.HCM</p>
+                            </div>
+                        </div>
+                        <span class="job-type">Part-time</span>
+                    </div>
+                    <div class="job-content">
+                        <h4>Nhân viên bán hàng</h4>
+                        <p>Tư vấn khách hàng, sắp xếp hàng hóa, thu ngân</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-money-bill"></i> 22,000đ/h</span>
+                            <span><i class="fas fa-clock"></i> 4-8h/ngày</span>
+                            <span><i class="fas fa-calendar"></i> Cuối tuần</span>
+                        </div>
+                    </div>
+                    <div class="job-footer">
+                        <button class="btn btn-primary">Ứng tuyển</button>
+                        <button class="btn btn-outline">Chi tiết</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Về StudentJobs</h2>
+                    <p>
+                        StudentJobs là nền tảng kết nối sinh viên với các cơ hội việc làm part-time 
+                        phù hợp. Chúng tôi hiểu rằng sinh viên cần công việc linh hoạt, không ảnh hưởng 
+                        đến việc học tập nhưng vẫn mang lại thu nhập ổn định.
+                    </p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <h3>10,000+</h3>
+                            <p>Sinh viên đã tìm được việc</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>500+</h3>
+                            <p>Nhà tuyển dụng uy tín</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>95%</h3>
+                            <p>Tỷ lệ hài lòng</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Liên hệ với chúng tôi</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Điện thoại</h4>
+                            <p>1900 1234</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>support@studentjobs.vn</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Địa chỉ</h4>
+                            <p>123 Nguyễn Huệ, Quận 1, TP.HCM</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Họ và tên" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" placeholder="Số điện thoại" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Nội dung tin nhắn" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi tin nhắn</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo.jpg" alt="StudentJobs Logo" class="logo">
+                        <span class="logo-text">StudentJobs</span>
+                    </div>
+                    <p>Kết nối sinh viên với cơ hội việc làm part-time tốt nhất</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết nhanh</h4>
+                    <ul>
+                        <li><a href="#home">Trang chủ</a></li>
+                        <li><a href="#jobs">Việc làm</a></li>
+                        <li><a href="#about">Về chúng tôi</a></li>
+                        <li><a href="#contact">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Trung tâm trợ giúp</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Theo dõi chúng tôi</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 StudentJobs. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Đăng nhập</h2>
+            <form class="modal-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Mật khẩu" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng nhập</button>
+            </form>
+            <p>Chưa có tài khoản? <a href="#" onclick="showRegisterModal()">Đăng ký ngay</a></p>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Đăng ký</h2>
+            <form class="modal-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" name="phone" placeholder="Số điện thoại">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="university" placeholder="Trường đại học">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="major" placeholder="Chuyên ngành">
+                </div>
+                <div class="form-group">
+                    <select name="year_of_study">
+                        <option value="">Năm học</option>
+                        <option value="1">Năm 1</option>
+                        <option value="2">Năm 2</option>
+                        <option value="3">Năm 3</option>
+                        <option value="4">Năm 4</option>
+                        <option value="5">Năm 5</option>
+                        <option value="6">Năm 6</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Mật khẩu" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng ký</button>
+            </form>
+            <p>Đã có tài khoản? <a href="#" onclick="showLoginModal()">Đăng nhập ngay</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
