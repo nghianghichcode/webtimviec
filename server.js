@@ -43,14 +43,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 
-// Serve static files for production
-if (config.server.env === 'production') {
-  app.use(express.static(path.join(__dirname, 'dist')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  });
-}
+// Serve static files
+app.use(express.static(path.join(__dirname)));
+
+// Serve index.html for all routes (SPA)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

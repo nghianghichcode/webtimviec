@@ -13,7 +13,10 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/server.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
