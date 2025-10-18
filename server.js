@@ -43,8 +43,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 
-// Serve static files
-app.use(express.static(path.join(__dirname)));
+// Serve static files (CSS, JS, images)
+app.use(express.static(path.join(__dirname), {
+  maxAge: '1d',
+  etag: false
+}));
 
 // Serve index.html for all routes (SPA)
 app.get('*', (req, res) => {
