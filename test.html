@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Part Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #6366f1;
+            text-align: center;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .nav-links a {
+            padding: 10px 20px;
+            background: #6366f1;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .nav-links a:hover {
+            background: #4f46e5;
+        }
+        .status {
+            background: #10b981;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Part Hub - Test Page</h1>
+        
+        <div class="status">
+            ✅ Website Part Hub đã hoạt động!
+        </div>
+        
+        <p><strong>Thời gian:</strong> <span id="time"></span></p>
+        
+        <h2>📄 Các trang có sẵn:</h2>
+        <div class="nav-links">
+            <a href="index.html">🏠 Trang chủ</a>
+            <a href="jobs.html">💼 Việc làm</a>
+            <a href="companies.html">🏢 Công ty</a>
+            <a href="about.html">ℹ️ Về chúng tôi</a>
+            <a href="contact.html">📞 Liên hệ</a>
+        </div>
+        
+        <h2>🔧 Tính năng:</h2>
+        <ul>
+            <li>✅ Part Hub branding</li>
+            <li>✅ Navigation menu</li>
+            <li>✅ Responsive design</li>
+            <li>✅ Job details modal</li>
+            <li>✅ Search & filter</li>
+            <li>✅ Company listings</li>
+            <li>✅ Contact form</li>
+            <li>✅ FAQ section</li>
+        </ul>
+        
+        <h2>📱 Test các trang:</h2>
+        <p>Click vào các link trên để test navigation giữa các trang.</p>
+        
+        <div class="status">
+            🎉 Part Hub website hoàn chỉnh và sẵn sàng sử dụng!
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString('vi-VN');
+    </script>
+</body>
+</html>
