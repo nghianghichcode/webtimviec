@@ -1,14 +1,8 @@
 // API Configuration
 const API_BASE_URL = 'http://localhost:3000/api';
 
-// DOM Elements
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-const filterBtns = document.querySelectorAll('.filter-btn');
-const jobCards = document.querySelectorAll('.job-card');
-const loginModal = document.getElementById('loginModal');
-const registerModal = document.getElementById('registerModal');
-const closeBtns = document.querySelectorAll('.close');
+// DOM Elements - Will be initialized after DOM loads
+let hamburger, navMenu, filterBtns, jobCards, loginModal, registerModal, closeBtns;
 
 // Global state
 let currentUser = null;
@@ -216,10 +210,14 @@ const sampleJobs = [
 ];
 
 // Mobile Navigation Toggle
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+function initMobileMenu() {
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+    }
+}
 
 // Close mobile menu when clicking on a link
 document.querySelectorAll('.nav-link').forEach(link => {
@@ -285,16 +283,7 @@ filterBtns.forEach(btn => {
     });
 });
 
-// Modal Functions
-function showLoginModal() {
-    loginModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-}
-
-function showRegisterModal() {
-    registerModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-}
+// Modal Functions - Removed duplicate functions
 
 function hideModals() {
     // Hide all modals
@@ -311,9 +300,13 @@ function hideModals() {
 }
 
 // Close modals when clicking close button
-closeBtns.forEach(btn => {
-    btn.addEventListener('click', hideModals);
-});
+function initCloseButtons() {
+    if (closeBtns && closeBtns.length > 0) {
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', hideModals);
+        });
+    }
+}
 
 // Add form event listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -629,9 +622,37 @@ const debouncedScrollHandler = debounce(() => {
 
 window.addEventListener('scroll', debouncedScrollHandler);
 
+// Initialize DOM elements
+function initializeDOMElements() {
+    hamburger = document.querySelector('.hamburger');
+    navMenu = document.querySelector('.nav-menu');
+    filterBtns = document.querySelectorAll('.filter-btn');
+    jobCards = document.querySelectorAll('.job-card');
+    loginModal = document.getElementById('loginModal');
+    registerModal = document.getElementById('registerModal');
+    closeBtns = document.querySelectorAll('.close');
+    
+    console.log('DOM Elements initialized:');
+    console.log('- Login modal:', loginModal);
+    console.log('- Register modal:', registerModal);
+    console.log('- Close buttons:', closeBtns.length);
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('StudentJobs website loaded successfully!');
+    console.log('Part Hub website loaded successfully!');
+    
+    // Initialize DOM elements
+    initializeDOMElements();
+    
+    // Initialize mobile menu
+    initMobileMenu();
+    
+    // Initialize close buttons
+    initCloseButtons();
+    
+    console.log('Login button:', document.querySelector('button[onclick="showLoginModal()"]'));
+    console.log('Register button:', document.querySelector('button[onclick="showRegisterModal()"]'));
     
     // Add loading animation
     document.body.style.opacity = '0';
@@ -1161,13 +1182,27 @@ function formatSalary(min, max, type) {
 
 // Updated Modal Functions
 async function showLoginModal() {
-  loginModal.style.display = 'block';
-  document.body.style.overflow = 'hidden';
+  console.log('showLoginModal called');
+  const modal = document.getElementById('loginModal');
+  if (modal) {
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    console.log('Login modal opened');
+  } else {
+    console.error('Login modal not found');
+  }
 }
 
 async function showRegisterModal() {
-  registerModal.style.display = 'block';
-  document.body.style.overflow = 'hidden';
+  console.log('showRegisterModal called');
+  const modal = document.getElementById('registerModal');
+  if (modal) {
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    console.log('Register modal opened');
+  } else {
+    console.error('Register modal not found');
+  }
 }
 
 // Updated Form Handlers
