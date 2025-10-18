@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công ty đối tác - Part Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="logo.jpg" alt="Part Hub Logo" class="logo">
+                    <span class="logo-text">Part Hub</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+                    <li><a href="jobs.html" class="nav-link">Việc làm</a></li>
+                    <li><a href="companies.html" class="nav-link active">Công ty</a></li>
+                    <li><a href="about.html" class="nav-link">Về chúng tôi</a></li>
+                    <li><a href="contact.html" class="nav-link">Liên hệ</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button class="btn btn-outline" onclick="showLoginModal()">Đăng nhập</button>
+                    <button class="btn btn-primary" onclick="showRegisterModal()">Đăng ký</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Companies Hero Section -->
+    <section class="companies-hero">
+        <div class="container">
+            <div class="companies-hero-content">
+                <h1>Công ty đối tác của Part Hub</h1>
+                <p>Kết nối với các công ty hàng đầu để tìm việc làm part-time chất lượng</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Companies Stats -->
+    <section class="companies-stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Công ty đối tác</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Việc làm đã đăng</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Tỷ lệ hài lòng</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Hỗ trợ khách hàng</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Companies -->
+    <section class="featured-companies">
+        <div class="container">
+            <h2 class="section-title">Công ty nổi bật</h2>
+            <div class="companies-grid">
+                <div class="company-card featured">
+                    <div class="company-logo">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <h3>Starbucks Vietnam</h3>
+                    <p class="company-description">Chuỗi cà phê hàng đầu thế giới</p>
+                    <div class="company-info">
+                        <div class="company-meta">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Hà Nội, TP.HCM</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-users"></i>
+                            <span>500+ nhân viên</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-star"></i>
+                            <span>4.8/5 đánh giá</span>
+                        </div>
+                    </div>
+                    <div class="company-jobs">
+                        <span class="job-count">15 việc làm</span>
+                        <span class="job-salary">25k-35k/h</span>
+                    </div>
+                    <button class="btn btn-primary" onclick="viewCompanyJobs('starbucks')">Xem việc làm</button>
+                </div>
+
+                <div class="company-card featured">
+                    <div class="company-logo">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Gia sư Online</h3>
+                    <p class="company-description">Nền tảng gia sư trực tuyến</p>
+                    <div class="company-info">
+                        <div class="company-meta">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Toàn quốc</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-users"></i>
+                            <span>1000+ gia sư</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-star"></i>
+                            <span>4.9/5 đánh giá</span>
+                        </div>
+                    </div>
+                    <div class="company-jobs">
+                        <span class="job-count">50+ việc làm</span>
+                        <span class="job-salary">40k-80k/h</span>
+                    </div>
+                    <button class="btn btn-primary" onclick="viewCompanyJobs('giasu')">Xem việc làm</button>
+                </div>
+
+                <div class="company-card featured">
+                    <div class="company-logo">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h3>Tech Solutions</h3>
+                    <p class="company-description">Công ty công nghệ hàng đầu</p>
+                    <div class="company-info">
+                        <div class="company-meta">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>TP.HCM</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-users"></i>
+                            <span>200+ nhân viên</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-star"></i>
+                            <span>4.7/5 đánh giá</span>
+                        </div>
+                    </div>
+                    <div class="company-jobs">
+                        <span class="job-count">25 việc làm</span>
+                        <span class="job-salary">30k-60k/h</span>
+                    </div>
+                    <button class="btn btn-primary" onclick="viewCompanyJobs('tech')">Xem việc làm</button>
+                </div>
+
+                <div class="company-card featured">
+                    <div class="company-logo">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3>Shopee Vietnam</h3>
+                    <p class="company-description">Sàn thương mại điện tử</p>
+                    <div class="company-info">
+                        <div class="company-meta">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>TP.HCM</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-users"></i>
+                            <span>1000+ nhân viên</span>
+                        </div>
+                        <div class="company-meta">
+                            <i class="fas fa-star"></i>
+                            <span>4.6/5 đánh giá</span>
+                        </div>
+                    </div>
+                    <div class="company-jobs">
+                        <span class="job-count">30 việc làm</span>
+                        <span class="job-salary">25k-45k/h</span>
+                    </div>
+                    <button class="btn btn-primary" onclick="viewCompanyJobs('shopee')">Xem việc làm</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Companies -->
+    <section class="all-companies">
+        <div class="container">
+            <h2 class="section-title">Tất cả công ty</h2>
+            <div class="companies-filter">
+                <button class="filter-btn active" data-industry="all">Tất cả</button>
+                <button class="filter-btn" data-industry="food">F&B</button>
+                <button class="filter-btn" data-industry="tech">Công nghệ</button>
+                <button class="filter-btn" data-industry="retail">Bán lẻ</button>
+                <button class="filter-btn" data-industry="education">Giáo dục</button>
+            </div>
+            
+            <div class="companies-list" id="companiesList">
+                <!-- Companies will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Registration -->
+    <section class="company-registration">
+        <div class="container">
+            <div class="registration-content">
+                <h2>Đăng ký công ty</h2>
+                <p>Tham gia mạng lưới công ty đối tác của Part Hub</p>
+                <div class="registration-benefits">
+                    <div class="benefit-item">
+                        <i class="fas fa-users"></i>
+                        <h4>Tìm kiếm nhân tài</h4>
+                        <p>Kết nối với hàng nghìn sinh viên tài năng</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Tăng hiệu quả tuyển dụng</h4>
+                        <p>Tiết kiệm thời gian và chi phí tuyển dụng</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Đảm bảo chất lượng</h4>
+                        <p>Hệ thống kiểm tra và đánh giá ứng viên</p>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="showCompanyRegistration()">
+                    <i class="fas fa-plus"></i> Đăng ký ngay
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo.jpg" alt="Part Hub Logo" class="logo">
+                        <span class="logo-text">Part Hub</span>
+                    </div>
+                    <p>Nền tảng tìm việc part-time hàng đầu cho sinh viên Việt Nam</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Việc làm</h4>
+                    <ul>
+                        <li><a href="jobs.html">Tìm việc part-time</a></li>
+                        <li><a href="#">Việc làm theo ngành</a></li>
+                        <li><a href="#">Việc làm theo địa điểm</a></li>
+                        <li><a href="#">Việc làm remote</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Công ty</h4>
+                    <ul>
+                        <li><a href="companies.html">Đăng tin tuyển dụng</a></li>
+                        <li><a href="#">Tìm ứng viên</a></li>
+                        <li><a href="#">Giải pháp HR</a></li>
+                        <li><a href="#">Báo cáo thị trường</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="about.html">Về chúng tôi</a></li>
+                        <li><a href="contact.html">Liên hệ</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Part Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Company Registration Modal -->
+    <div id="companyRegistrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Đăng ký công ty</h2>
+            <form id="companyRegistrationForm">
+                <div class="form-group">
+                    <label for="companyName">Tên công ty</label>
+                    <input type="text" id="companyName" required>
+                </div>
+                <div class="form-group">
+                    <label for="companyEmail">Email công ty</label>
+                    <input type="email" id="companyEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="companyPhone">Số điện thoại</label>
+                    <input type="tel" id="companyPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="companyAddress">Địa chỉ</label>
+                    <input type="text" id="companyAddress" required>
+                </div>
+                <div class="form-group">
+                    <label for="companyIndustry">Ngành nghề</label>
+                    <select id="companyIndustry" required>
+                        <option value="">Chọn ngành nghề</option>
+                        <option value="food">F&B</option>
+                        <option value="tech">Công nghệ</option>
+                        <option value="retail">Bán lẻ</option>
+                        <option value="education">Giáo dục</option>
+                        <option value="other">Khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="companySize">Quy mô công ty</label>
+                    <select id="companySize" required>
+                        <option value="">Chọn quy mô</option>
+                        <option value="small">1-50 nhân viên</option>
+                        <option value="medium">51-200 nhân viên</option>
+                        <option value="large">200+ nhân viên</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng ký</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

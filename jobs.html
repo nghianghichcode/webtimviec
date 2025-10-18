@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Việc làm Part-time - Part Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="logo.jpg" alt="Part Hub Logo" class="logo">
+                    <span class="logo-text">Part Hub</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+                    <li><a href="jobs.html" class="nav-link active">Việc làm</a></li>
+                    <li><a href="companies.html" class="nav-link">Công ty</a></li>
+                    <li><a href="about.html" class="nav-link">Về chúng tôi</a></li>
+                    <li><a href="contact.html" class="nav-link">Liên hệ</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button class="btn btn-outline" onclick="showLoginModal()">Đăng nhập</button>
+                    <button class="btn btn-primary" onclick="showRegisterModal()">Đăng ký</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Jobs Hero Section -->
+    <section class="jobs-hero">
+        <div class="container">
+            <div class="jobs-hero-content">
+                <h1>Tìm việc làm part-time phù hợp</h1>
+                <p>Khám phá hàng nghìn cơ hội việc làm part-time chất lượng cao</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Search -->
+    <section class="jobs-search-section">
+        <div class="container">
+            <div class="jobs-search">
+                <div class="search-container">
+                    <input type="text" id="jobSearchInput" placeholder="Tìm kiếm việc làm, công ty, địa điểm..." class="search-input">
+                    <button class="search-btn" onclick="searchJobs()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <div class="filter-options">
+                    <select id="locationFilter" class="filter-select">
+                        <option value="">Tất cả địa điểm</option>
+                        <option value="hanoi">Hà Nội</option>
+                        <option value="hcm">TP.HCM</option>
+                        <option value="danang">Đà Nẵng</option>
+                        <option value="cantho">Cần Thơ</option>
+                    </select>
+                    
+                    <select id="salaryFilter" class="filter-select">
+                        <option value="">Mức lương</option>
+                        <option value="0-20">Dưới 20k/h</option>
+                        <option value="20-30">20k-30k/h</option>
+                        <option value="30-50">30k-50k/h</option>
+                        <option value="50+">Trên 50k/h</option>
+                    </select>
+                    
+                    <select id="timeFilter" class="filter-select">
+                        <option value="">Thời gian</option>
+                        <option value="morning">Sáng</option>
+                        <option value="afternoon">Chiều</option>
+                        <option value="evening">Tối</option>
+                        <option value="weekend">Cuối tuần</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="jobs-filter">
+                <button class="filter-btn active" data-category="all">Tất cả</button>
+                <button class="filter-btn" data-category="food">F&B</button>
+                <button class="filter-btn" data-category="education">Giáo dục</button>
+                <button class="filter-btn" data-category="tech">Công nghệ</button>
+                <button class="filter-btn" data-category="retail">Bán lẻ</button>
+                <button class="filter-btn" data-category="content">Content</button>
+                <button class="filter-btn" data-category="marketing">Marketing</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jobs List -->
+    <section class="jobs-list">
+        <div class="container">
+            <div class="jobs-header">
+                <h2>Việc làm mới nhất</h2>
+                <div class="jobs-count">
+                    <span id="jobsCount">0</span> việc làm
+                </div>
+            </div>
+            
+            <!-- Jobs Grid -->
+            <div class="jobs-grid" id="jobsGrid">
+                <!-- Jobs will be loaded here -->
+            </div>
+            
+            <!-- Load More -->
+            <div class="load-more-section">
+                <button class="btn btn-outline btn-large" onclick="loadMoreJobs()">
+                    <i class="fas fa-plus"></i> Xem thêm việc làm
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo.jpg" alt="Part Hub Logo" class="logo">
+                        <span class="logo-text">Part Hub</span>
+                    </div>
+                    <p>Nền tảng tìm việc part-time hàng đầu cho sinh viên Việt Nam</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Việc làm</h4>
+                    <ul>
+                        <li><a href="jobs.html">Tìm việc part-time</a></li>
+                        <li><a href="#">Việc làm theo ngành</a></li>
+                        <li><a href="#">Việc làm theo địa điểm</a></li>
+                        <li><a href="#">Việc làm remote</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Công ty</h4>
+                    <ul>
+                        <li><a href="companies.html">Đăng tin tuyển dụng</a></li>
+                        <li><a href="#">Tìm ứng viên</a></li>
+                        <li><a href="#">Giải pháp HR</a></li>
+                        <li><a href="#">Báo cáo thị trường</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="about.html">Về chúng tôi</a></li>
+                        <li><a href="contact.html">Liên hệ</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Part Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Job Detail Modal -->
+    <div id="jobDetailModal" class="modal">
+        <div class="modal-content job-detail-modal">
+            <span class="close">&times;</span>
+            <div id="jobDetailContent">
+                <!-- Job details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Đăng nhập</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mật khẩu</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Đăng ký</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Họ tên</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Mật khẩu</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Số điện thoại</label>
+                    <input type="tel" id="registerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerUniversity">Trường đại học</label>
+                    <input type="text" id="registerUniversity" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerMajor">Chuyên ngành</label>
+                    <input type="text" id="registerMajor" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerYear">Năm học</label>
+                    <select id="registerYear" required>
+                        <option value="1">Năm 1</option>
+                        <option value="2">Năm 2</option>
+                        <option value="3">Năm 3</option>
+                        <option value="4">Năm 4</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng ký</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

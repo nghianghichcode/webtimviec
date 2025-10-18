@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Về chúng tôi - Part Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="logo.jpg" alt="Part Hub Logo" class="logo">
+                    <span class="logo-text">Part Hub</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+                    <li><a href="jobs.html" class="nav-link">Việc làm</a></li>
+                    <li><a href="companies.html" class="nav-link">Công ty</a></li>
+                    <li><a href="about.html" class="nav-link active">Về chúng tôi</a></li>
+                    <li><a href="contact.html" class="nav-link">Liên hệ</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button class="btn btn-outline" onclick="showLoginModal()">Đăng nhập</button>
+                    <button class="btn btn-primary" onclick="showRegisterModal()">Đăng ký</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- About Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="about-hero-content">
+                <h1>Về Part Hub</h1>
+                <p>Nền tảng tìm việc part-time hàng đầu cho sinh viên Việt Nam</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="our-story">
+        <div class="container">
+            <div class="story-content">
+                <div class="story-text">
+                    <h2>Câu chuyện của chúng tôi</h2>
+                    <p>Part Hub được thành lập với sứ mệnh kết nối sinh viên Việt Nam với các cơ hội việc làm part-time chất lượng cao. Chúng tôi hiểu rằng việc cân bằng giữa học tập và làm việc là một thách thức lớn đối với sinh viên.</p>
+                    <p>Từ những ngày đầu, chúng tôi đã cam kết tạo ra một nền tảng an toàn, tin cậy và hiệu quả để giúp sinh viên tìm được công việc phù hợp với lịch học và mục tiêu nghề nghiệp.</p>
+                    <div class="story-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">2020</div>
+                            <div class="stat-label">Năm thành lập</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50,000+</div>
+                            <div class="stat-label">Sinh viên đã tham gia</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1,000+</div>
+                            <div class="stat-label">Công ty đối tác</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-users"></i>
+                        <p>Đội ngũ Part Hub</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Mission -->
+    <section class="our-mission">
+        <div class="container">
+            <h2 class="section-title">Sứ mệnh của chúng tôi</h2>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Hỗ trợ sinh viên</h3>
+                    <p>Giúp sinh viên tìm được công việc part-time phù hợp với lịch học và mục tiêu nghề nghiệp</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Kết nối doanh nghiệp</h3>
+                    <p>Tạo cầu nối giữa doanh nghiệp và sinh viên tài năng, mang lại lợi ích cho cả hai bên</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Đảm bảo an toàn</h3>
+                    <p>Kiểm tra kỹ lưỡng các công ty và việc làm để đảm bảo môi trường làm việc an toàn</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Team -->
+    <section class="our-team">
+        <div class="container">
+            <h2 class="section-title">Đội ngũ của chúng tôi</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Nguyễn Văn A</h3>
+                    <p class="member-role">CEO & Founder</p>
+                    <p class="member-description">Chuyên gia trong lĩnh vực HR và có hơn 10 năm kinh nghiệm</p>
+                    <div class="member-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Trần Thị B</h3>
+                    <p class="member-role">CTO</p>
+                    <p class="member-description">Chuyên gia công nghệ với kinh nghiệm phát triển nền tảng</p>
+                    <div class="member-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Lê Văn C</h3>
+                    <p class="member-role">Head of Marketing</p>
+                    <p class="member-description">Chuyên gia marketing với kinh nghiệm xây dựng thương hiệu</p>
+                    <div class="member-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values -->
+    <section class="our-values">
+        <div class="container">
+            <h2 class="section-title">Giá trị cốt lõi</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Tận tâm</h3>
+                    <p>Chúng tôi luôn đặt lợi ích của sinh viên và doanh nghiệp lên hàng đầu</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Chất lượng</h3>
+                    <p>Cam kết mang đến những cơ hội việc làm chất lượng cao</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Đổi mới</h3>
+                    <p>Không ngừng cải tiến và phát triển để phục vụ tốt hơn</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Tin cậy</h3>
+                    <p>Xây dựng mối quan hệ dựa trên sự tin tưởng và minh bạch</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="contact-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Bạn có câu hỏi?</h2>
+                <p>Liên hệ với chúng tôi để được hỗ trợ tốt nhất</p>
+                <div class="cta-buttons">
+                    <a href="contact.html" class="btn btn-primary btn-large">Liên hệ ngay</a>
+                    <a href="jobs.html" class="btn btn-outline btn-large">Tìm việc làm</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo.jpg" alt="Part Hub Logo" class="logo">
+                        <span class="logo-text">Part Hub</span>
+                    </div>
+                    <p>Nền tảng tìm việc part-time hàng đầu cho sinh viên Việt Nam</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Việc làm</h4>
+                    <ul>
+                        <li><a href="jobs.html">Tìm việc part-time</a></li>
+                        <li><a href="#">Việc làm theo ngành</a></li>
+                        <li><a href="#">Việc làm theo địa điểm</a></li>
+                        <li><a href="#">Việc làm remote</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Công ty</h4>
+                    <ul>
+                        <li><a href="companies.html">Đăng tin tuyển dụng</a></li>
+                        <li><a href="#">Tìm ứng viên</a></li>
+                        <li><a href="#">Giải pháp HR</a></li>
+                        <li><a href="#">Báo cáo thị trường</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="about.html">Về chúng tôi</a></li>
+                        <li><a href="contact.html">Liên hệ</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Part Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -16,6 +16,82 @@ let currentJobs = [];
 let currentPage = 1;
 let currentFilters = {};
 
+// Sample jobs data
+const sampleJobs = [
+    {
+        id: 1,
+        title: "Barista - Starbucks",
+        company: "Starbucks Vietnam",
+        location: "Hà Nội",
+        salary: "25k-35k/h",
+        type: "Part-time",
+        category: "food",
+        description: "Tìm kiếm nhân viên pha chế cà phê part-time tại Starbucks. Công việc linh hoạt, phù hợp với sinh viên.",
+        requirements: [
+            "Sinh viên năm 2 trở lên",
+            "Có kinh nghiệm pha chế (ưu tiên)",
+            "Giao tiếp tốt",
+            "Làm việc được ca sáng/chiều"
+        ],
+        benefits: [
+            "Lương cạnh tranh",
+            "Đào tạo miễn phí",
+            "Môi trường làm việc chuyên nghiệp",
+            "Cơ hội thăng tiến"
+        ],
+        postedDate: "2024-01-15",
+        deadline: "2024-02-15"
+    },
+    {
+        id: 2,
+        title: "Gia sư Toán - Online",
+        company: "Gia sư Online",
+        location: "Toàn quốc",
+        salary: "50k-80k/h",
+        type: "Part-time",
+        category: "education",
+        description: "Tìm gia sư dạy Toán online cho học sinh cấp 2, cấp 3. Làm việc linh hoạt theo lịch học.",
+        requirements: [
+            "Sinh viên chuyên ngành Toán/Toán học",
+            "Điểm GPA >= 3.0",
+            "Có kinh nghiệm gia sư",
+            "Thành thạo công nghệ online"
+        ],
+        benefits: [
+            "Lương cao",
+            "Làm việc tại nhà",
+            "Lịch linh hoạt",
+            "Phát triển kỹ năng sư phạm"
+        ],
+        postedDate: "2024-01-14",
+        deadline: "2024-02-14"
+    },
+    {
+        id: 3,
+        title: "Content Writer",
+        company: "Tech Solutions",
+        location: "TP.HCM",
+        salary: "30k-50k/h",
+        type: "Part-time",
+        category: "content",
+        description: "Viết nội dung cho website và blog công nghệ. Công việc remote, linh hoạt thời gian.",
+        requirements: [
+            "Sinh viên chuyên ngành Marketing/CNTT",
+            "Kỹ năng viết tốt",
+            "Hiểu biết về công nghệ",
+            "Làm việc độc lập"
+        ],
+        benefits: [
+            "Làm việc remote",
+            "Lương hấp dẫn",
+            "Phát triển portfolio",
+            "Môi trường startup năng động"
+        ],
+        postedDate: "2024-01-13",
+        deadline: "2024-02-13"
+    }
+];
+
 // Mobile Navigation Toggle
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
@@ -791,6 +867,211 @@ async function initializeApp() {
   }
 }
 
+// Job detail functions
+function showJobDetails(jobId) {
+    const job = sampleJobs.find(j => j.id === jobId);
+    if (!job) return;
+    
+    const modal = document.getElementById('jobDetailModal');
+    const content = document.getElementById('jobDetailContent');
+    
+    if (modal && content) {
+        content.innerHTML = `
+            <div class="job-detail-header">
+                <h2 class="job-detail-title">${job.title}</h2>
+                <p class="job-detail-company">${job.company}</p>
+                <div class="job-detail-meta">
+                    <div class="job-meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${job.location}</span>
+                    </div>
+                    <div class="job-meta-item">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>${job.salary}</span>
+                    </div>
+                    <div class="job-meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>${job.type}</span>
+                    </div>
+                    <div class="job-meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Đăng: ${job.postedDate}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="job-detail-content">
+                <div class="job-detail-section">
+                    <h3>Mô tả công việc</h3>
+                    <p>${job.description}</p>
+                </div>
+                
+                <div class="job-detail-section">
+                    <h3>Yêu cầu</h3>
+                    <div class="job-requirements">
+                        <ul>
+                            ${job.requirements.map(req => `<li>${req}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="job-detail-section">
+                    <h3>Quyền lợi</h3>
+                    <div class="job-requirements">
+                        <ul>
+                            ${job.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="job-apply-section">
+                <div class="job-salary">${job.salary}</div>
+                <p>Hạn nộp hồ sơ: ${job.deadline}</p>
+                <button class="btn btn-primary btn-large" onclick="applyForJob(${job.id})">
+                    <i class="fas fa-paper-plane"></i> Ứng tuyển ngay
+                </button>
+            </div>
+        `;
+        
+        modal.style.display = 'block';
+    }
+}
+
+function searchJobs() {
+    const searchTerm = document.getElementById('jobSearchInput')?.value || '';
+    const location = document.getElementById('locationFilter')?.value || '';
+    const salary = document.getElementById('salaryFilter')?.value || '';
+    const time = document.getElementById('timeFilter')?.value || '';
+    
+    let filteredJobs = sampleJobs;
+    
+    if (searchTerm) {
+        filteredJobs = filteredJobs.filter(job => 
+            job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            job.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }
+    
+    if (location) {
+        filteredJobs = filteredJobs.filter(job => 
+            job.location.toLowerCase().includes(location.toLowerCase())
+        );
+    }
+    
+    renderJobs(filteredJobs);
+}
+
+function loadMoreJobs() {
+    // Simulate loading more jobs
+    const moreJobs = [
+        {
+            id: 4,
+            title: "Nhân viên bán hàng",
+            company: "Shopee Vietnam",
+            location: "TP.HCM",
+            salary: "25k-40k/h",
+            type: "Part-time",
+            category: "retail",
+            description: "Tìm nhân viên bán hàng part-time tại cửa hàng Shopee.",
+            requirements: ["Sinh viên", "Giao tiếp tốt", "Nhiệt tình"],
+            benefits: ["Lương cạnh tranh", "Môi trường năng động"],
+            postedDate: "2024-01-12",
+            deadline: "2024-02-12"
+        }
+    ];
+    
+    currentJobs = [...currentJobs, ...moreJobs];
+    renderJobs(currentJobs);
+}
+
+function renderJobs(jobs) {
+    const jobsGrid = document.getElementById('jobsGrid');
+    if (!jobsGrid) return;
+    
+    currentJobs = jobs;
+    
+    jobsGrid.innerHTML = jobs.map(job => `
+        <div class="job-card">
+            <div class="job-header">
+                <h3 class="job-title">${job.title}</h3>
+                <span class="job-type">${job.type}</span>
+            </div>
+            <div class="job-company">${job.company}</div>
+            <div class="job-details">
+                <div class="job-detail">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${job.location}</span>
+                </div>
+                <div class="job-detail">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>${job.salary}</span>
+                </div>
+                <div class="job-detail">
+                    <i class="fas fa-clock"></i>
+                    <span>${job.postedDate}</span>
+                </div>
+            </div>
+            <div class="job-description">
+                ${job.description}
+            </div>
+            <div class="job-footer">
+                <button class="btn btn-outline" onclick="showJobDetails(${job.id})">
+                    <i class="fas fa-eye"></i> Xem chi tiết
+                </button>
+                <button class="btn btn-primary" onclick="applyForJob(${job.id})">
+                    <i class="fas fa-paper-plane"></i> Ứng tuyển
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Update jobs count
+    const jobsCount = document.getElementById('jobsCount');
+    if (jobsCount) {
+        jobsCount.textContent = jobs.length;
+    }
+}
+
+// FAQ functionality
+function initFAQ() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        if (question) {
+            question.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        }
+    });
+}
+
+// Company registration
+function showCompanyRegistration() {
+    const modal = document.getElementById('companyRegistrationModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+// Company jobs
+function viewCompanyJobs(companyId) {
+    // Filter jobs by company
+    const companyJobs = sampleJobs.filter(job => 
+        job.company.toLowerCase().includes(companyId.toLowerCase())
+    );
+    
+    if (companyJobs.length > 0) {
+        renderJobs(companyJobs);
+        // Scroll to jobs section
+        const jobsSection = document.getElementById('jobs');
+        if (jobsSection) {
+            jobsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+}
+
 // Export functions for global access
 window.showLoginModal = showLoginModal;
 window.showRegisterModal = showRegisterModal;
@@ -798,3 +1079,8 @@ window.scrollToJobs = scrollToJobs;
 window.applyForJob = applyForJob;
 window.viewJobDetails = viewJobDetails;
 window.logout = logout;
+window.showJobDetails = showJobDetails;
+window.searchJobs = searchJobs;
+window.loadMoreJobs = loadMoreJobs;
+window.showCompanyRegistration = showCompanyRegistration;
+window.viewCompanyJobs = viewCompanyJobs;
