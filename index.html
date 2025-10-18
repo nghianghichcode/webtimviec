@@ -374,11 +374,11 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" required>
+                    <input type="email" id="loginEmail" name="email" required>
                 </div>
                 <div class="form-group">
                     <label for="loginPassword">Mật khẩu</label>
-                    <input type="password" id="loginPassword" required>
+                    <input type="password" id="loginPassword" name="password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Đăng nhập</button>
             </form>
@@ -393,31 +393,32 @@
             <form id="registerForm">
                 <div class="form-group">
                     <label for="registerName">Họ tên</label>
-                    <input type="text" id="registerName" required>
+                    <input type="text" id="registerName" name="name" required>
                 </div>
                 <div class="form-group">
                     <label for="registerEmail">Email</label>
-                    <input type="email" id="registerEmail" required>
+                    <input type="email" id="registerEmail" name="email" required>
                 </div>
                 <div class="form-group">
                     <label for="registerPassword">Mật khẩu</label>
-                    <input type="password" id="registerPassword" required>
+                    <input type="password" id="registerPassword" name="password" required>
                 </div>
                 <div class="form-group">
                     <label for="registerPhone">Số điện thoại</label>
-                    <input type="tel" id="registerPhone" required>
+                    <input type="tel" id="registerPhone" name="phone">
                 </div>
                 <div class="form-group">
                     <label for="registerUniversity">Trường đại học</label>
-                    <input type="text" id="registerUniversity" required>
+                    <input type="text" id="registerUniversity" name="university">
                 </div>
                 <div class="form-group">
                     <label for="registerMajor">Chuyên ngành</label>
-                    <input type="text" id="registerMajor" required>
+                    <input type="text" id="registerMajor" name="major">
                 </div>
                 <div class="form-group">
                     <label for="registerYear">Năm học</label>
-                    <select id="registerYear" required>
+                    <select id="registerYear" name="year_of_study">
+                        <option value="">Chọn năm học</option>
                         <option value="1">Năm 1</option>
                         <option value="2">Năm 2</option>
                         <option value="3">Năm 3</option>

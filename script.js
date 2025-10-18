@@ -229,6 +229,26 @@ document.querySelectorAll('.nav-link').forEach(link => {
     });
 });
 
+// Modal close functionality
+document.addEventListener('click', (e) => {
+    // Close modal when clicking X button
+    if (e.target.classList.contains('close')) {
+        hideModals();
+    }
+    
+    // Close modal when clicking outside modal content
+    if (e.target.classList.contains('modal')) {
+        hideModals();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        hideModals();
+    }
+});
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -277,14 +297,36 @@ function showRegisterModal() {
 }
 
 function hideModals() {
-    loginModal.style.display = 'none';
-    registerModal.style.display = 'none';
+    // Hide all modals
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.style.display = 'none';
+    });
+    
+    // Reset body overflow
     document.body.style.overflow = 'auto';
+    
+    // Remove any active classes
+    document.body.classList.remove('modal-open');
 }
 
 // Close modals when clicking close button
 closeBtns.forEach(btn => {
     btn.addEventListener('click', hideModals);
+});
+
+// Add form event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+    
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+    }
 });
 
 // Close modals when clicking outside
