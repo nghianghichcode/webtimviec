@@ -651,6 +651,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize close buttons
     initCloseButtons();
     
+    // Check server status on load
+    checkServerStatus().then(available => {
+      if (available) {
+        console.log('✅ Server is running - Database connection available');
+        showNotification('Kết nối database thành công!', 'success');
+      } else {
+        console.log('⚠️ Server not running - Using demo mode');
+        showNotification('Chế độ demo - Server chưa khởi động', 'info');
+      }
+    });
+    
     console.log('Login button:', document.querySelector('button[onclick="showLoginModal()"]'));
     console.log('Register button:', document.querySelector('button[onclick="showRegisterModal()"]'));
     
@@ -686,6 +697,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 1000);
 });
+
+// Check server status
+async function checkServerStatus() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/health`, { 
+      method: 'GET',
+      timeout: 3000 
+    });
+    return response.ok;
+  } catch (error) {
+    console.log('Server not available:', error.message);
+    return false;
+  }
+}
 
 // API Helper Functions
 async function apiRequest(endpoint, options = {}) {
@@ -729,6 +754,7 @@ async function apiRequest(endpoint, options = {}) {
 // Authentication Functions
 async function login(email, password) {
   try {
+    console.log('Attempting login with:', email);
     const response = await apiRequest('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
@@ -738,15 +764,35 @@ async function login(email, password) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       currentUser = response.data.user;
+      console.log('Login successful:', currentUser);
       return response;
     }
   } catch (error) {
+    console.error('Login error:', error);
+    // Fallback for demo purposes
+    if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
+      console.log('Server not running, using demo login');
+      const demoUser = {
+        id: 1,
+        name: email.split('@')[0],
+        email: email,
+        phone: '0123456789',
+        university: 'Đại học Demo',
+        major: 'Công nghệ thông tin',
+        year_of_study: 3
+      };
+      localStorage.setItem('token', 'demo-token-' + Date.now());
+      localStorage.setItem('user', JSON.stringify(demoUser));
+      currentUser = demoUser;
+      return { success: true, data: { user: demoUser } };
+    }
     throw error;
   }
 }
 
 async function register(userData) {
   try {
+    console.log('Attempting register with:', userData);
     const response = await apiRequest('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
@@ -756,9 +802,28 @@ async function register(userData) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       currentUser = response.data.user;
+      console.log('Register successful:', currentUser);
       return response;
     }
   } catch (error) {
+    console.error('Register error:', error);
+    // Fallback for demo purposes
+    if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
+      console.log('Server not running, using demo register');
+      const demoUser = {
+        id: Date.now(),
+        name: userData.name,
+        email: userData.email,
+        phone: userData.phone || '0123456789',
+        university: userData.university || 'Đại học Demo',
+        major: userData.major || 'Công nghệ thông tin',
+        year_of_study: userData.year_of_study || 3
+      };
+      localStorage.setItem('token', 'demo-token-' + Date.now());
+      localStorage.setItem('user', JSON.stringify(demoUser));
+      currentUser = demoUser;
+      return { success: true, data: { user: demoUser } };
+    }
     throw error;
   }
 }
@@ -1212,13 +1277,22 @@ async function handleLogin(event) {
   const email = formData.get('email');
   const password = formData.get('password');
 
+  console.log('Login form submitted:', { email, password });
+
   try {
-    await login(email, password);
+    // Check server status first
+    const serverAvailable = await checkServerStatus();
+    console.log('Server available:', serverAvailable);
+
+    const result = await login(email, password);
+    console.log('Login result:', result);
+    
     showNotification('Đăng nhập thành công!', 'success');
     hideModals();
     updateAuthUI();
     event.target.reset();
   } catch (error) {
+    console.error('Login failed:', error);
     showNotification(error.message || 'Đăng nhập thất bại', 'error');
   }
 }
@@ -1236,13 +1310,22 @@ async function handleRegister(event) {
     year_of_study: formData.get('year_of_study') ? parseInt(formData.get('year_of_study')) : null
   };
 
+  console.log('Register form submitted:', userData);
+
   try {
-    await register(userData);
+    // Check server status first
+    const serverAvailable = await checkServerStatus();
+    console.log('Server available:', serverAvailable);
+
+    const result = await register(userData);
+    console.log('Register result:', result);
+    
     showNotification('Đăng ký thành công!', 'success');
     hideModals();
     updateAuthUI();
     event.target.reset();
   } catch (error) {
+    console.error('Register failed:', error);
     showNotification(error.message || 'Đăng ký thất bại', 'error');
   }
 }
