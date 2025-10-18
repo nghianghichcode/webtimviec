@@ -1,5 +1,5 @@
-// API Configuration - Static mode for GitHub Pages
-const API_BASE_URL = null; // Disabled for static deployment
+// API Configuration
+const API_BASE_URL = 'http://localhost:3000/api';
 
 // DOM Elements
 const hamburger = document.querySelector('.hamburger');
@@ -598,15 +598,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
 });
 
-// API Helper Functions - Static mode for GitHub Pages
+// API Helper Functions
 async function apiRequest(endpoint, options = {}) {
-  // For static deployment, return mock success response
-  console.log('Static mode: API request disabled for GitHub Pages deployment');
-  return {
-    success: true,
-    data: {},
-    message: 'Static mode - API disabled'
+  const url = `${API_BASE_URL}${endpoint}`;
+  const defaultOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
+
+  // Add auth token if available
+  const token = localStorage.getItem('token');
+  if (token) {
+    defaultOptions.headers.Authorization = `Bearer ${token}`;
+  }
+
+  const config = {
+    ...defaultOptions,
+    ...options,
+    headers: {
+      ...defaultOptions.headers,
+      ...options.headers,
+    },
+  };
+
+  try {
+    const response = await fetch(url, config);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'API request failed');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('API request error:', error);
+    throw error;
+  }
 }
 
 // Authentication Functions
@@ -670,10 +698,27 @@ async function getCurrentUser() {
 // Job Functions
 async function fetchJobs(filters = {}) {
   try {
-    // Use sample data for static deployment
+    const queryParams = new URLSearchParams();
+    
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== '') {
+        queryParams.append(key, filters[key]);
+      }
+    });
+
+    const response = await apiRequest(`/jobs?${queryParams.toString()}`);
+    
+    if (response.success) {
+      currentJobs = response.data.jobs;
+      return response.data;
+    }
+  } catch (error) {
+    console.error('Fetch jobs error:', error);
+    // Fallback to sample data if API fails
+    console.log('Falling back to sample data...');
     let filteredJobs = [...sampleJobs];
     
-    // Apply filters
+    // Apply filters to sample data
     if (filters.category && filters.category !== 'all') {
       filteredJobs = filteredJobs.filter(job => job.category === filters.category);
     }
@@ -682,17 +727,6 @@ async function fetchJobs(filters = {}) {
       filteredJobs = filteredJobs.filter(job => 
         job.location.toLowerCase().includes(filters.location.toLowerCase())
       );
-    }
-    
-    if (filters.salary && filters.salary !== 'all') {
-      filteredJobs = filteredJobs.filter(job => {
-        const salary = job.salary;
-        if (filters.salary === 'under-20k') return salary.includes('20k') && !salary.includes('30k');
-        if (filters.salary === '20k-30k') return salary.includes('25k') || salary.includes('30k');
-        if (filters.salary === '30k-50k') return salary.includes('35k') || salary.includes('40k') || salary.includes('50k');
-        if (filters.salary === 'over-50k') return salary.includes('50k') && !salary.includes('25k');
-        return true;
-      });
     }
     
     if (filters.search) {
@@ -711,23 +745,21 @@ async function fetchJobs(filters = {}) {
       page: 1,
       totalPages: 1
     };
-  } catch (error) {
-    console.error('Fetch jobs error:', error);
-    throw error;
   }
 }
 
 async function fetchJobById(id) {
   try {
-    // Use sample data for static deployment
+    const response = await apiRequest(`/jobs/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Fetch job error:', error);
+    // Fallback to sample data
     const job = sampleJobs.find(job => job.id === parseInt(id));
     if (!job) {
       throw new Error('Job not found');
     }
     return job;
-  } catch (error) {
-    console.error('Fetch job error:', error);
-    throw error;
   }
 }
 
