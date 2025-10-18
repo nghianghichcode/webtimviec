@@ -679,6 +679,91 @@ async function logout() {
   localStorage.removeItem('user');
   currentUser = null;
   updateAuthUI();
+  showNotification('Đã đăng xuất thành công!', 'success');
+}
+
+// User Profile Functions
+function showUserProfile() {
+  if (!currentUser) {
+    showNotification('Vui lòng đăng nhập trước!', 'error');
+    return;
+  }
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-user"></i> Hồ sơ cá nhân</h2>
+        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="profile-info">
+          <div class="profile-avatar">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="profile-details">
+            <h3>${currentUser.name}</h3>
+            <p><i class="fas fa-envelope"></i> ${currentUser.email}</p>
+            <p><i class="fas fa-phone"></i> ${currentUser.phone || 'Chưa cập nhật'}</p>
+            <p><i class="fas fa-university"></i> ${currentUser.university || 'Chưa cập nhật'}</p>
+            <p><i class="fas fa-graduation-cap"></i> ${currentUser.major || 'Chưa cập nhật'}</p>
+            <p><i class="fas fa-calendar"></i> Năm ${currentUser.year_of_study || 'Chưa cập nhật'}</p>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn btn-primary" onclick="editProfile()">
+            <i class="fas fa-edit"></i> Chỉnh sửa hồ sơ
+          </button>
+          <button class="btn btn-outline" onclick="this.closest('.modal').remove()">
+            <i class="fas fa-times"></i> Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function showMyApplications() {
+  if (!currentUser) {
+    showNotification('Vui lòng đăng nhập trước!', 'error');
+    return;
+  }
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-file-alt"></i> Đơn ứng tuyển của tôi</h2>
+        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="applications-list">
+          <div class="no-applications">
+            <i class="fas fa-inbox"></i>
+            <h3>Chưa có đơn ứng tuyển nào</h3>
+            <p>Hãy tìm việc làm phù hợp và ứng tuyển ngay!</p>
+            <button class="btn btn-primary" onclick="this.closest('.modal').remove(); document.querySelector('.nav-link[href=\"jobs.html\"]').click();">
+              <i class="fas fa-search"></i> Tìm việc làm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function editProfile() {
+  showNotification('Tính năng chỉnh sửa hồ sơ đang được phát triển!', 'info');
 }
 
 async function getCurrentUser() {
@@ -793,19 +878,36 @@ async function getUserApplications() {
 // UI Update Functions
 function updateAuthUI() {
   const navButtons = document.querySelector('.nav-buttons');
-  const userMenu = document.querySelector('.user-menu');
+  if (!navButtons) return;
   
   if (currentUser) {
     navButtons.innerHTML = `
       <div class="user-menu">
-        <span class="user-name">Xin chào, ${currentUser.name}</span>
-        <button class="btn btn-outline" onclick="logout()">Đăng xuất</button>
+        <div class="user-info">
+          <i class="fas fa-user-circle"></i>
+          <span class="user-name">${currentUser.name}</span>
+        </div>
+        <div class="user-actions">
+          <button class="btn btn-outline" onclick="showUserProfile()">
+            <i class="fas fa-user"></i> Hồ sơ
+          </button>
+          <button class="btn btn-outline" onclick="showMyApplications()">
+            <i class="fas fa-file-alt"></i> Đơn ứng tuyển
+          </button>
+          <button class="btn btn-outline" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+          </button>
+        </div>
       </div>
     `;
   } else {
     navButtons.innerHTML = `
-      <button class="btn btn-outline" onclick="showLoginModal()">Đăng nhập</button>
-      <button class="btn btn-primary" onclick="showRegisterModal()">Đăng ký</button>
+      <button class="btn btn-outline" onclick="showLoginModal()">
+        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+      </button>
+      <button class="btn btn-primary" onclick="showRegisterModal()">
+        <i class="fas fa-user-plus"></i> Đăng ký
+      </button>
     `;
   }
 }
@@ -1239,3 +1341,6 @@ window.searchJobs = searchJobs;
 window.loadMoreJobs = loadMoreJobs;
 window.showCompanyRegistration = showCompanyRegistration;
 window.viewCompanyJobs = viewCompanyJobs;
+window.showUserProfile = showUserProfile;
+window.showMyApplications = showMyApplications;
+window.editProfile = editProfile;
