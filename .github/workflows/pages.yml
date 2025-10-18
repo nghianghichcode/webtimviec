@@ -1,0 +1,266 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Initialize database
+      run: npm run init-db
+      
+    - name: Build static files
+      run: |
+        mkdir -p dist
+        cp -r *.html *.css *.js *.json *.jpg dist/
+        cp -r routes dist/
+        cp -r database dist/
+        cp -r scripts dist/
+        cp -r node_modules dist/
+        
+    - name: Create index.html for GitHub Pages
+      run: |
+        cat > dist/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>StudentJobs - Tìm việc làm part-time cho sinh viên</title>
+            <link rel="stylesheet" href="styles.css">
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        </head>
+        <body>
+            <!-- Navigation -->
+            <nav class="navbar">
+                <div class="nav-container">
+                    <div class="nav-logo">
+                        <img src="logo.jpg" alt="StudentJobs Logo" class="logo">
+                        <span class="logo-text">StudentJobs</span>
+                    </div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#home" class="nav-link">Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#jobs" class="nav-link">Việc làm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#about" class="nav-link">Về chúng tôi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact" class="nav-link">Liên hệ</a>
+                        </li>
+                    </ul>
+                    <div class="nav-buttons">
+                        <button class="btn btn-outline" onclick="showLoginModal()">Đăng nhập</button>
+                        <button class="btn btn-primary" onclick="showRegisterModal()">Đăng ký</button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section id="home" class="hero">
+                <div class="hero-container">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Tìm việc làm part-time phù hợp cho sinh viên</h1>
+                        <p class="hero-description">
+                            Kết nối sinh viên với các cơ hội việc làm part-time linh hoạt, 
+                            phù hợp với lịch học và mang lại thu nhập ổn định.
+                        </p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary btn-large" onclick="scrollToJobs()">
+                                <i class="fas fa-search"></i> Tìm việc ngay
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="showRegisterModal()">
+                                <i class="fas fa-user-plus"></i> Đăng ký miễn phí
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features">
+                <div class="container">
+                    <h2 class="section-title">Tại sao chọn StudentJobs?</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h3>Linh hoạt thời gian</h3>
+                            <p>Làm việc theo lịch học, không ảnh hưởng đến việc học tập</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3>An toàn & Tin cậy</h3>
+                            <p>Kiểm tra kỹ lưỡng các nhà tuyển dụng, đảm bảo an toàn</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <h3>Thu nhập ổn định</h3>
+                            <p>Mức lương cạnh tranh, thanh toán đúng hạn</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3>Phát triển kỹ năng</h3>
+                            <p>Nâng cao kinh nghiệm làm việc và kỹ năng thực tế</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Jobs Section -->
+            <section id="jobs" class="jobs">
+                <div class="container">
+                    <h2 class="section-title">Việc làm mới nhất</h2>
+                    <div class="jobs-grid" id="jobsGrid">
+                        <!-- Jobs will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h3>StudentJobs</h3>
+                            <p>Kết nối sinh viên với cơ hội việc làm part-time</p>
+                        </div>
+                        <div class="footer-section">
+                            <h4>Liên kết</h4>
+                            <ul>
+                                <li><a href="#home">Trang chủ</a></li>
+                                <li><a href="#jobs">Việc làm</a></li>
+                                <li><a href="#about">Về chúng tôi</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-section">
+                            <h4>Hỗ trợ</h4>
+                            <ul>
+                                <li><a href="#contact">Liên hệ</a></li>
+                                <li><a href="#help">Trợ giúp</a></li>
+                                <li><a href="#privacy">Chính sách</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; 2024 StudentJobs. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+
+            <!-- Modals -->
+            <div id="loginModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Đăng nhập</h2>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Mật khẩu</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="registerModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Đăng ký</h2>
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="registerName">Họ tên</label>
+                            <input type="text" id="registerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Mật khẩu</label>
+                            <input type="password" id="registerPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Số điện thoại</label>
+                            <input type="tel" id="registerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerUniversity">Trường đại học</label>
+                            <input type="text" id="registerUniversity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerMajor">Chuyên ngành</label>
+                            <input type="text" id="registerMajor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerYear">Năm học</label>
+                            <select id="registerYear" required>
+                                <option value="1">Năm 1</option>
+                                <option value="2">Năm 2</option>
+                                <option value="3">Năm 3</option>
+                                <option value="4">Năm 4</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Đăng ký</button>
+                    </form>
+                </div>
+            </div>
+
+            <script src="script.js"></script>
+        </body>
+        </html>
+        EOF
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v3
+        with:
+          artifact_name: github-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
